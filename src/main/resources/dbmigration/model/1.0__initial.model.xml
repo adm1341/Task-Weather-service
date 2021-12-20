@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="weather_history" pkName="pk_weather_history">
+            <column name="weather_date" type="timestamp"/>
+            <column name="weather_value" type="varchar"/>
+        </createTable>
+    </changeSet>
+</migration>

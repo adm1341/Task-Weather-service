@@ -1,0 +1,1 @@
+web: sh build/install/Task-Weather-service/bin/Task-Weather-service -DAPP_ENV=production
