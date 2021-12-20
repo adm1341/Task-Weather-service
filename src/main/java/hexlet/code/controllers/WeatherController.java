@@ -55,6 +55,7 @@ public class WeatherController {
             String tempHTML = htmlString.substring(htmlString.indexOf("weather__temp")).substring(15, 18);
             tempHTML.trim();
             tempHTML = tempHTML.replaceAll("\u2212", "-"); //Symbol −
+            tempHTML = tempHTML.replaceAll("\u00b0", "");//Symbol °
             return tempHTML;
 
         } catch (IOException e) {
