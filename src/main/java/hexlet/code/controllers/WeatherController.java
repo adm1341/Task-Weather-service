@@ -4,6 +4,13 @@ import hexlet.code.domain.Weather_history;
 import hexlet.code.domain.query.QWeather_history;
 import io.javalin.http.Handler;
 
+import java.io.IOException;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -42,6 +49,36 @@ public class WeatherController {
     }
 
     private static String getWeatherToYandex() {
-        return "-10";
+
+        try {
+            String htmlString = getHTMLYandex();
+            String tempHTML = htmlString.substring(htmlString.indexOf("weather__temp")).substring(15, 18);
+            tempHTML.trim();
+            tempHTML = tempHTML.replaceAll("\u2212", "-"); //Symbol −
+            return tempHTML;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return "-100";
+    }
+
+    private static String getHTMLYandex() throws IOException, URISyntaxException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://yandex.ru/"))
+                .GET()
+                .build();
+        HttpResponse response = HttpClient
+                .newBuilder()
+                .proxy(ProxySelector.getDefault())
+                .build()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body().toString();
     }
 }
