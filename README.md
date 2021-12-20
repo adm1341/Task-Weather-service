@@ -6,3 +6,5 @@
 Технологии<br>
 - Javalin<br>
 - Ebean<br>
+
+Это приложение на Heroku (PostgreSQL) https://fast-anchorage-47290.herokuapp.com/ 
