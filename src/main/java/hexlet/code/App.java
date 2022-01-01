@@ -27,6 +27,14 @@ public class App {
         return app;
     }
 
+    private static String getMode() {
+        return System.getenv().getOrDefault("APP_ENV", "development");
+    }
+
+    public static boolean isProduction() {
+        return getMode().equals("production");
+    }
+
     public static void main(String[] args) {
         Javalin app = getApp();
         app.start(getPort());

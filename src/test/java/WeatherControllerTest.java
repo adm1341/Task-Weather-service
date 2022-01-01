@@ -50,11 +50,20 @@ public class WeatherControllerTest {
 
 
     @Test
-    void testWeatherSimple() {
+    void testWeatherPositive() {
         HttpResponse<String> response = Unirest.get(baseUrl + "/weather/").asString();
 
         Integer weather = Integer.valueOf(response.getBody());
 
-        assertThat(weather).isBetween(-100, 100);
+        assertThat(weather).isEqualTo(-10);
+    }
+
+    @Test
+    void testWeatherNegative() {
+        HttpResponse<String> response = Unirest.get(baseUrl + "/weather/").asString();
+
+        Integer weather = Integer.valueOf(response.getBody());
+
+        assertThat(weather).isNotEqualTo(-100);
     }
 }

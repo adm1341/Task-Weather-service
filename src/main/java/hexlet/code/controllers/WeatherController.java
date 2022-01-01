@@ -2,15 +2,11 @@ package hexlet.code.controllers;
 
 import hexlet.code.domain.Weather_history;
 import hexlet.code.domain.query.QWeather_history;
+import hexlet.code.pageLoader.YandexPageLoader;
 import io.javalin.http.Handler;
 
 import java.io.IOException;
-import java.net.ProxySelector;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -33,10 +29,9 @@ public class WeatherController {
     };
 
     private static Weather_history getWeather_historyToDate(Date todayUtil) {
-        Weather_history history = new QWeather_history()
+        return new QWeather_history()
                 .weather_date.equalTo(todayUtil)
                 .findOne();
-        return history;
     }
 
     private static Weather_history createWeather_historyToDate(Date todayUtil) {
@@ -51,35 +46,17 @@ public class WeatherController {
     private static String getWeatherToYandex() {
 
         try {
-            String htmlString = getHTMLYandex();
+            String htmlString = YandexPageLoader.getHTML();
             String tempHTML = htmlString.substring(htmlString.indexOf("weather__temp")).substring(15, 18);
-            tempHTML.trim();
+            tempHTML = tempHTML.trim();
             tempHTML = tempHTML.replaceAll("\u2212", "-"); //Symbol −
             tempHTML = tempHTML.replaceAll("\u00b0", "");//Symbol °
             return tempHTML;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
         }
 
         return "-100";
-    }
-
-    private static String getHTMLYandex() throws IOException, URISyntaxException, InterruptedException {
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://yandex.ru/"))
-                .GET()
-                .build();
-        HttpResponse response = HttpClient
-                .newBuilder()
-                .proxy(ProxySelector.getDefault())
-                .build()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body().toString();
     }
 }
